@@ -10,20 +10,21 @@ Copyright (c) 2002 Douglas Crockford  (www.JSLint.com) Rhino Edition
 /*jslint rhino: true*/
 
 (function (a) {
-    if (!a[0]) {
-        print("Usage: jslint.js file.js");
+    if (!a[0] || !a[1]) {
+        print("Usage: rhino.js config_file.js file.js");
         quit(1);
     }
-    var input = readFile(a[0]);
-    if (!input) {
+    var config = readFile(a[0]);
+    if (!config) {
         print("jslint: Couldn't open file '" + a[0] + "'.");
         quit(1);
     }
-    if (!JSLINT(input, {bitwise: true, eqeqeq: true, immed: true,
-            newcap: true, nomen: true, onevar: false, plusplus: true,
-            regexp: true, rhino: true, undef: true, white: false, indent: false,
-            browser: true
-            })) {
+    var input = readFile(a[1]);
+    if (!input) {
+        print("jslint: Couldn't open file '" + a[1] + "'.");
+        quit(1);
+    }
+    if (!JSLINT(input, config)) {
         for (var i = 0; i < JSLINT.errors.length; i += 1) {
             var e = JSLINT.errors[i];
             if (e) {
