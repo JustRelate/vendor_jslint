@@ -42,16 +42,8 @@ module Javascript
       with_options_file(options) do |config_file|
         print "Checking Javascript "
 
-        @files.each do |file|
-          scan = check(file, config_file)
-          if scan.failed?
-            failures << scan
-            $stdout.print "F"
-          else
-            $stdout.print "."
-          end
-          $stdout.flush
-        end
+        scan = check(@files, config_file)
+        failures << scan if scan.failed?
       end
 
       if failures.empty?
@@ -59,7 +51,6 @@ module Javascript
       else
         puts "\nFAILED"
         failures.each do |f|
-          puts f.source + ":"
           puts f.messages
         end
         raise "Javascript is broken"
@@ -68,7 +59,7 @@ module Javascript
 
     private
 
-    def check(file, config_file)
+    def check(files, config_file)
       call = []
       call << 'java'
       call << '-jar'
@@ -79,7 +70,9 @@ module Javascript
       call << third_party('fulljslint.js')
       call << "#{BASE}/rhino.js"
       call << config_file
-      call << file
+      files.each do |f|
+        call << f
+      end
       failed = false
       call = call.map do |c|
           if c == ''
@@ -92,7 +85,7 @@ module Javascript
       end.join(' ')
       text = `#{call}`
       ok = text !~ /Lint at/
-      Result.new(ok, file, text)
+      Result.new(ok, text)
     end
 
 
@@ -108,11 +101,10 @@ module Javascript
     end
 
     class Result
-      attr_reader :source, :messages
+      attr_reader :messages
 
-      def initialize(ok, source, messages)
+      def initialize(ok, messages)
         @ok = ok
-        @source = source
         @messages = messages
       end
 
