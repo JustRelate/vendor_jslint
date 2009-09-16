@@ -24,6 +24,7 @@ Copyright (c) 2002 Douglas Crockford  (www.JSLint.com) Rhino Edition
         print("jslint: Couldn't open file '" + a[1] + "'.");
         quit(1);
     }
+    config = eval('(' + config + ')');
     if (!JSLINT(input, config)) {
         for (var i = 0; i < JSLINT.errors.length; i += 1) {
             var e = JSLINT.errors[i];
