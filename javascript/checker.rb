@@ -14,14 +14,14 @@ module Javascript
         :immed => true,
         :newcap => true,
         :nomen => true,
-        :plusplus => true,
         :regexp => true,
         :rhino => true,
         :undef => true,
-        :white => true,
         # false
+        :plusplus => false,
         :indent => false,
         :onevar => false,
+        :white => false,
         }
 
     def self.check(files, options = {})
