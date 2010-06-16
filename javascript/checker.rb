@@ -4,7 +4,7 @@ require 'active_support' # to_json
 module Javascript
   class Checker
 
-    BASE = File.dirname(__FILE__) + '/..'
+    BASE = File.expand_path(File.dirname(__FILE__) + '/..')
 
     JSLINT_DEFAULT_OPTIONS = {
         # true
